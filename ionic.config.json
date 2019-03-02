@@ -1,0 +1,7 @@
+{
+  "name": "app_i9Estoquista",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

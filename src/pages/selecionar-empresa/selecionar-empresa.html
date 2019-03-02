@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <!-- <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button> -->
+    <ion-title>
+      Selecionar empresa
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding id="page6">
+  <ion-list id="selecionarEmpresa-list3" *ngIf="empresas">
+
+
+    <ion-item-sliding *ngFor="let empresa of empresas">
+      <ion-item color="none" id="selecionarEmpresa-list-item8" (click)="selecionarEmpresa(empresa)"  >
+        <ion-avatar item-left>
+          <img [src]="transform('data:image/png;base64,' + empresa.logo)" />
+        </ion-avatar>
+        <h2>
+          {{empresa.nomeFantasia}}
+        </h2>
+      </ion-item>
+      <ion-item-options side="left">
+        <button ion-button color="positive"></button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+
+  </ion-list>
+</ion-content>
