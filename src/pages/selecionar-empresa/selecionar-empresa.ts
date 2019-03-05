@@ -2,7 +2,7 @@ import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, Loading } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ProdutosContabilizadosPage } from '../produtos-contabilizados/produtos-contabilizados';
+// import { ProdutosContabilizadosPage } from '../produtos-contabilizados/produtos-contabilizados';
 import { FirestoreService } from '../../providers/api-firebase/firestore.service';
 // import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { Storage } from '@ionic/storage';
@@ -26,7 +26,6 @@ export class SelecionarEmpresaPage {
     private sanitizer:DomSanitizer,
     private db: FirestoreService,
     public loadingCtrl: LoadingController,
-    // private nativeStorage: NativeStorage
     private storage: Storage
   ) {
 
@@ -48,10 +47,8 @@ export class SelecionarEmpresaPage {
 
 
   getEmpresa(cnpj) {
-    console.log(cnpj);
      this.apiEmpresa.getEmpresa(cnpj).subscribe( empresa => {
        this.empresas.push(empresa);
-       console.log(this.empresas);
      });
   }
 
@@ -60,54 +57,37 @@ export class SelecionarEmpresaPage {
   }
 
   selecionarEmpresa(empresa) {
+    console.log(empresa);
+    this.storage.set('cnpj', empresa.cnpj);
+    this.storage.get('produtosContabilizados_' + empresa.cnpj).then((produtosContabilizados: any[]) => {
+      if(produtosContabilizados === null) {
+        this.storage.set('produtosContabilizados_' + empresa.cnpj, []);
+      }
+    });
+   
     this.empresaSelecionada = empresa;
-    // this.navCtrl.push(ProdutosContabilizadosPage, { empresa:  this.empresaSelecionada });
-    this.navCtrl.push(LeitorPage, { empresa:  this.empresaSelecionada });
-    // this.salvarEmpresaBaseLocal();
-
-    this.storage.get('produtos').then((val) => {
-      if (val) {
-        console.log('Produtos => ', val);
+    this.storage.get('produtos_' + this.empresaSelecionada.cnpj).then((produtos) => {
+      if (produtos) {
+        console.log('produtos_' + this.empresaSelecionada.cnpj, produtos);
+        this.goLeitor();
       } else {
         this.getProdutosEmpresa(this.empresaSelecionada.cnpj);
       }
-     
-    });
-
-    
-  }
-
-  salvarEmpresaBaseLocal() {
-    this.empresasFirebase.doc(this.empresaSelecionada.cnpj).set(this.empresaSelecionada).then( () => {
-    
     });
   }
 
-  getProdutosEmpresaFirebase(cnpj, collectionReference: firebase.firestore.CollectionReference) {
-     this.apiEmpresa.getProdutosEmpresa(cnpj).subscribe( (produtos: any[]) => {
-      this.loading("Carregando produtos...", 3000);
 
-      // this.empresasFirebase.doc(this.empresaSelecionada.cnpj).collection('produtos').get().then( produtos  => {
-      //   console.log(produtos.docs.length);
-      // });
-
-      console.log(produtos);
-
-      // produtos.forEach(produto => {
-      //  collectionReference.doc(produto.id.toString()).set(produto).then( valor => {
-      //    console.log(produto.id);
-      //  });
-      // });
-
-
-     });
+  goLeitor() {
+    this.navCtrl.push(LeitorPage, { empresa:  this.empresaSelecionada });
   }
+
 
   getProdutosEmpresa(cnpj) {
-    const loading = this.loading("Carregando produtos...", 30000);
+    const loading = this.loading("Carregando produtos...", 30000000);
     this.apiEmpresa.getProdutosEmpresa(cnpj).subscribe( (produtos: any[]) => {
       loading.dismiss();
-      this.storage.set('produtos', produtos);
+      this.storage.set('produtos_' + cnpj, produtos);
+      this.goLeitor();
     });
  }
 

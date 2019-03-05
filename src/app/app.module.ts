@@ -15,6 +15,7 @@ import { ProdutosContabilizadosPage } from '../pages/produtos-contabilizados/pro
 import { FirestoreService } from '../providers/api-firebase/firestore.service';
 import { AppService } from '../providers/api-firebase/app.service';
 import { IonicStorageModule } from '@ionic/storage';
+import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { IonicStorageModule } from '@ionic/storage';
     NgxMaskModule.forRoot(),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    IncrementarPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

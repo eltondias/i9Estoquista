@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { IncrementarPage } from '../incrementar/incrementar';
 
 @Component({
   selector: 'page-leitor',
@@ -21,23 +22,23 @@ export class LeitorPage {
   }
 
   ionViewDidLoad() {
+   
     this.empresaSelecionada = this.navParams.get('empresa');
-    this.storage.get('produtos').then((produtos) => {
+    this.storage.get('produtos_' + this.empresaSelecionada.cnpj).then((produtos) => {
           this.produtos = produtos;
-          // console.log(this.produtos);
     });
-
     this.leitorScanner();
-
   }
 
   buscarProduto() {
     this.produtoSelecionado = this.produtos.find( x => x.id == this.codigoProduto);
-    console.log(this.produtos.find( x => x.id == this.codigoProduto)); 
+    if (this.produtoSelecionado) {
+      this.navCtrl.push(IncrementarPage, { produtoSelecionado:  this.produtoSelecionado });
+    }
   }
 
 
   leitorScanner() {
   }
-  
+
 }

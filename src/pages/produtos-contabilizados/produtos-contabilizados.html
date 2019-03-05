@@ -14,4 +14,11 @@
 
 <ion-content padding>
 
+    <ion-list>
+        <button ion-item *ngFor="let produto of produtosContabilizados" (click)="atualizarProduto(produto)">        
+            <h2> {{produto.produto.descricao}} </h2>
+            <h3> Quantidade: {{produto.qtd}}</h3>
+        </button>  
+    </ion-list>
+
 </ion-content>

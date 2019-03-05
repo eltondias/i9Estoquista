@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { SelecionarEmpresaPage } from '../selecionar-empresa/selecionar-empresa';
 import { ApiUsuarioProvider } from './../../providers/api-usuario/api-usuario';
 import { FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-login',
@@ -18,7 +19,8 @@ export class LoginPage {
   constructor(
     public navCtrl: NavController, 
     public apiUsuario: ApiUsuarioProvider,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private storage: Storage
      ) {
        
       this.login =  '51678284220';
@@ -41,6 +43,7 @@ export class LoginPage {
   entrar() {
      
     this.apiUsuario.login( this.login.toString(), this.senha.toString()).subscribe( empresas => {
+      this.storage.set('cpf', this.login);
       this.navCtrl.push(SelecionarEmpresaPage, { empresas: empresas });
     });
   }

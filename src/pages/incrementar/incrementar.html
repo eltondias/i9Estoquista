@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>incrementar</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <ion-card *ngIf="produto">
+        <ion-card-content>
+    
+          <ion-card-title>
+            {{produtoSelecionado.descricao}}
+          </ion-card-title>
+          <p>
+            {{produtoSelecionado.descricao2}}
+          </p>
+    
+    
+          <ion-item>
+            <ion-label floating>Quantidade atual</ion-label>
+            <ion-input type="tel" name="qtd_atual" [(ngModel)]="produto.qtd" required></ion-input>
+          </ion-item>
+    
+          <ion-grid>
+            <ion-row>
+              <ion-col >
+                <button ion-button block color="light" (click)="decrementar()">
+                  <ion-icon name="remove"></ion-icon>
+                </button>
+              </ion-col>
+              
+              <ion-col >
+                <button ion-button block color="light" (click)="incrementar()">
+                  <ion-icon name="add"></ion-icon>
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+    
+    
+    
+        </ion-card-content>
+    
+        <button id="login-button1" ion-button color="balanced" (click)="confirmar()"   block style="color:#FFFFFF;">
+          confirmar
+        </button>
+    
+      </ion-card>
+    
+
+
+</ion-content>
