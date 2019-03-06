@@ -22,12 +22,9 @@ export class LeitorPage {
   }
 
   ionViewDidLoad() {
-   
-    this.empresaSelecionada = this.navParams.get('empresa');
-    this.storage.get('produtos_' + this.empresaSelecionada.cnpj).then((produtos) => {
-          this.produtos = produtos;
+    this.getEmpresa().then(() => {
+        this.getProdutos();
     });
-    this.leitorScanner();
   }
 
   buscarProduto() {
@@ -37,8 +34,12 @@ export class LeitorPage {
     }
   }
 
+  async getProdutos(){
+    this.produtos =  await this.storage.get('produtos_' + this.empresaSelecionada.cnpj);
+  }
 
-  leitorScanner() {
+  async getEmpresa(){
+    this.empresaSelecionada =  await this.storage.get('empresa');
   }
 
 }

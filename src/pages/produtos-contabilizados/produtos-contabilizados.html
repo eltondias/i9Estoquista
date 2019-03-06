@@ -1,18 +1,19 @@
-<!--
-  Generated template for the ProdutosContabilizadosPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header  >
+<ion-header>
   <ion-navbar>
-    <ion-title *ngIf="empresaSelecionada">
-       {{empresaSelecionada.nomeFantasia}}
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Produtos contabilizados
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+
+  <button id="login-button1" ion-button color="balanced" (click)="sincronizarProdutos()"   block style="color:#FFFFFF;">
+    Sincronizar
+  </button>
 
     <ion-list>
         <button ion-item *ngFor="let produto of produtosContabilizados" (click)="atualizarProduto(produto)">        
@@ -20,5 +21,7 @@
             <h3> Quantidade: {{produto.qtd}}</h3>
         </button>  
     </ion-list>
+
+    
 
 </ion-content>

@@ -16,6 +16,8 @@ import { FirestoreService } from '../providers/api-firebase/firestore.service';
 import { AppService } from '../providers/api-firebase/app.service';
 import { IonicStorageModule } from '@ionic/storage';
 import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
+import { TabsPage } from '../pages/tabs/tabs';
+import { ApiProdutoEmpresaProvider } from '../providers/api-produto-empresa/api-produto-empresa';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
     LoginPage,
     SelecionarEmpresaPage,
     LeitorPage,
-    ProdutosContabilizadosPage
+    ProdutosContabilizadosPage,
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,8 @@ import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
     LoginPage,
     SelecionarEmpresaPage,
     LeitorPage,
-    ProdutosContabilizadosPage
+    ProdutosContabilizadosPage,
+    TabsPage
   ],
   providers: [
     StatusBar,
@@ -48,7 +52,8 @@ import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
     ApiUsuarioProvider,
     ApiEmpresaProvider,
     AppService,
-    FirestoreService
+    FirestoreService,
+    ApiProdutoEmpresaProvider
   ]
 })
 export class AppModule {}

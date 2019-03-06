@@ -1,3 +1,5 @@
+import { ProdutosContabilizadosPage } from './../produtos-contabilizados/produtos-contabilizados';
+import { TabsPage } from './../tabs/tabs';
 import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, Loading } from 'ionic-angular';
@@ -29,11 +31,15 @@ export class SelecionarEmpresaPage {
     private storage: Storage
   ) {
 
-    
-
-    this.navParams.get("empresas").forEach(empresa => {
-      this.getEmpresa(empresa.cadUsuario.cadUsuarioPK.cnpjEmpresa);
+    this.storage.get('empresas').then( empresas => {
+      empresas.forEach(empresa => {
+        this.getEmpresa(empresa.cadUsuario.cadUsuarioPK.cnpjEmpresa);
+      });
     });
+  }
+
+  async getEmpresas(){
+    this.empresaSelecionada =  await this.storage.get('empresas');
   }
 
   loading(mensagem, duracao): Loading {
@@ -57,28 +63,24 @@ export class SelecionarEmpresaPage {
   }
 
   selecionarEmpresa(empresa) {
-    console.log(empresa);
+    this.empresaSelecionada = empresa;    
+    this.storage.set('empresa', empresa);
     this.storage.set('cnpj', empresa.cnpj);
-    this.storage.get('produtosContabilizados_' + empresa.cnpj).then((produtosContabilizados: any[]) => {
-      if(produtosContabilizados === null) {
-        this.storage.set('produtosContabilizados_' + empresa.cnpj, []);
-      }
-    });
    
-    this.empresaSelecionada = empresa;
-    this.storage.get('produtos_' + this.empresaSelecionada.cnpj).then((produtos) => {
-      if (produtos) {
-        console.log('produtos_' + this.empresaSelecionada.cnpj, produtos);
-        this.goLeitor();
-      } else {
-        this.getProdutosEmpresa(this.empresaSelecionada.cnpj);
+    this.storage.get('produtosContabilizados_' + this.empresaSelecionada.cnpj).then((produtosContabilizados: any[]) => {
+      if(produtosContabilizados === null) {
+        this.storage.set('produtosContabilizados_' + this.empresaSelecionada.cnpj, []);
       }
     });
-  }
 
+    this.storage.get('produtos_' + empresa.cnpj).then((produtos) => {
+      if (produtos === null) {
+        this.getProdutosEmpresa(empresa.cnpj);
+      } else {
+        this.navCtrl.push(TabsPage);
+      } 
+    });
 
-  goLeitor() {
-    this.navCtrl.push(LeitorPage, { empresa:  this.empresaSelecionada });
   }
 
 
@@ -87,7 +89,7 @@ export class SelecionarEmpresaPage {
     this.apiEmpresa.getProdutosEmpresa(cnpj).subscribe( (produtos: any[]) => {
       loading.dismiss();
       this.storage.set('produtos_' + cnpj, produtos);
-      this.goLeitor();
+      this.navCtrl.push(TabsPage);
     });
  }
 

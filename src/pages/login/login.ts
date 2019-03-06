@@ -44,7 +44,9 @@ export class LoginPage {
      
     this.apiUsuario.login( this.login.toString(), this.senha.toString()).subscribe( empresas => {
       this.storage.set('cpf', this.login);
-      this.navCtrl.push(SelecionarEmpresaPage, { empresas: empresas });
+      this.storage.set('empresas', empresas).then(() => {
+        this.navCtrl.push(SelecionarEmpresaPage, { empresas: empresas });
+      });
     });
   }
 

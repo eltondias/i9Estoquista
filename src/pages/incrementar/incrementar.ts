@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, Tabs } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
-import { ProdutosContabilizadosPage } from '../produtos-contabilizados/produtos-contabilizados';
 import { Storage } from '@ionic/storage';
  
 
@@ -25,10 +24,14 @@ export class IncrementarPage {
   cpf: string;
   cnpj: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, 
-    private storage: Storage
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private storage: Storage,
+    private app: App
     ) {
    
+     
   }
 
   ionViewDidLoad() {
@@ -99,6 +102,16 @@ export class IncrementarPage {
   
   confirmar() {
     this.setProdutosContabilizados();
-    this.navCtrl.push(ProdutosContabilizadosPage);
+
+    const tabsNav = this.app.getNavByIdOrName('myTabsNav') as Tabs;
+
+    if (this.navCtrl.id === 't0-1') {
+      tabsNav.select(0);
+    } 
+
+    this.navCtrl.pop();
+    
+
+   
   }
 }
