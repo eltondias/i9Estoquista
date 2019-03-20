@@ -13,10 +13,7 @@ export class ApiUsuarioProvider extends Api {
   super() {}
 
   login( login: String, senha: String ) {
-    const params =   [];
-    params['login'] =  login;
-    params['senha'] =  senha;
-   return  this.get('login-api/farma', params);
+   return  this.http. get(this.url + '/login-api/farma?login='+ login + '&senha=' + senha);
   }
 
 }

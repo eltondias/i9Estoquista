@@ -3,6 +3,7 @@ import { ProdutosContabilizadosPage } from './../produtos-contabilizados/produto
 import { Component } from '@angular/core';
 import { LeitorPage } from '../leitor/leitor';
 import { NavParams, NavController } from 'ionic-angular';
+import { ProdutosPage } from '../produtos/produtos';
 
  
 
@@ -13,7 +14,7 @@ export class TabsPage {
 
   tab1Root = ProdutosContabilizadosPage;
   tab2Root = LeitorPage;
-  tab3Root = SelecionarEmpresaPage;
+  tab3Root = ProdutosPage;
 
   constructor(
     public navCtrl: NavController,

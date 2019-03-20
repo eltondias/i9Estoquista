@@ -17,7 +17,7 @@ export class ApiEmpresaProvider extends Api {
   }
 
   getProdutosEmpresa( cnpj: String )  {
-    return this.http.get(this.url + '/produtos-api/lista/empresa/' + cnpj);
+    return this.http.get(this.url + '/produtos-estoque/empresa/' + cnpj);
   }
 
   

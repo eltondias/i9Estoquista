@@ -1,10 +1,12 @@
+import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, IonicPage, LoadingController, Loading } from 'ionic-angular';
 import { SelecionarEmpresaPage } from '../selecionar-empresa/selecionar-empresa';
 import { ApiUsuarioProvider } from './../../providers/api-usuario/api-usuario';
 import { FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 
+@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
@@ -14,19 +16,38 @@ export class LoginPage {
 
   login: string;
   senha: string;
-  
+  empresaList  = [];
   
   constructor(
     public navCtrl: NavController, 
     public apiUsuario: ApiUsuarioProvider,
+    public apiEmpresa: ApiEmpresaProvider,
     private formBuilder: FormBuilder,
-    private storage: Storage
+    private storage: Storage,
+    public loadingCtrl: LoadingController,
      ) {
        
-      this.login =  '51678284220';
-      this.senha = '123456'; 
+      this.login =  '67374212291';
+      this.senha = 'a'; 
+
+      this.storage.get('cpf').then( cpf => {
+        console.log(cpf);
+        if (cpf) {
+            this.navCtrl.push(SelecionarEmpresaPage);
+        }
+      });
  
   }
+
+  loading(mensagem, duracao): Loading {
+    const loader = this.loadingCtrl.create({
+      content: mensagem,
+      duration: duracao
+    });
+    loader.present();
+    return loader;
+  }
+
 
   formDeValidacao = this.formBuilder.group({
     login: new FormControl({ value: null, disabled: false}, Validators.compose([
@@ -41,14 +62,28 @@ export class LoginPage {
   });
 
   entrar() {
-     
-    this.apiUsuario.login( this.login.toString(), this.senha.toString()).subscribe( empresas => {
+    
+    const loading = this.loading("Aguarde...", 30000000);
+  
+    this.apiUsuario.login( this.login.toString(), this.senha.toString()).subscribe( (empresas:any[]) => {
       this.storage.set('cpf', this.login);
-      this.storage.set('empresas', empresas).then(() => {
-        this.navCtrl.push(SelecionarEmpresaPage, { empresas: empresas });
+      loading.dismiss();
+      empresas.forEach(empresa => {
+        this.apiEmpresa.getEmpresa(empresa.cadUsuario.cadUsuarioPK.cnpjEmpresa).subscribe( empresa => {
+          this.empresaList.push(empresa);
+          if (empresas.length === this.empresaList.length) {
+            this.storage.set('empresas', this.empresaList).then(() => {
+              this.navCtrl.push(SelecionarEmpresaPage, { empresas: this.empresaList });
+            });
+          }
+        });
       });
+
     });
   }
+
+
+
 
   goToSelecionarEmpresa(params){
     if (!params) params = {};

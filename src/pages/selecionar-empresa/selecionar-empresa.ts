@@ -10,6 +10,7 @@ import { FirestoreService } from '../../providers/api-firebase/firestore.service
 import { Storage } from '@ionic/storage';
 import { LeitorPage } from '../leitor/leitor';
 
+
 @Component({
   selector: 'page-selecionar-empresa',
   templateUrl: 'selecionar-empresa.html'
@@ -19,27 +20,23 @@ export class SelecionarEmpresaPage {
   empresas: any[] = [];
   produtos: any[] = [];
   empresaSelecionada: any;
-  empresasFirebase = this.db.getCollection("empresas");
+  
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public apiEmpresa: ApiEmpresaProvider,
     private sanitizer:DomSanitizer,
-    private db: FirestoreService,
     public loadingCtrl: LoadingController,
     private storage: Storage
   ) {
 
-    this.storage.get('empresas').then( empresas => {
-      empresas.forEach(empresa => {
-        this.getEmpresa(empresa.cadUsuario.cadUsuarioPK.cnpjEmpresa);
-      });
-    });
+    this.getEmpresas();
+  
   }
 
   async getEmpresas(){
-    this.empresaSelecionada =  await this.storage.get('empresas');
+    this.empresas =  await this.storage.get('empresas');
   }
 
   loading(mensagem, duracao): Loading {
@@ -52,11 +49,7 @@ export class SelecionarEmpresaPage {
   }
 
 
-  getEmpresa(cnpj) {
-     this.apiEmpresa.getEmpresa(cnpj).subscribe( empresa => {
-       this.empresas.push(empresa);
-     });
-  }
+ 
 
   transform(html) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(html);

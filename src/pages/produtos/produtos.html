@@ -4,12 +4,12 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      Produtos contabilizados
+      Produtos cadastrados
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only  (click)="sincronizarProdutos()" *ngIf="produtosContabilizados.length !== 0">
-        <ion-icon name="cloud-upload"></ion-icon>
+      <button ion-button icon-only  (click)="sincronizarProdutos()">
+        <ion-icon name="sync"></ion-icon>
       </button>
     </ion-buttons>
 
@@ -19,7 +19,7 @@
 <ion-content padding>
 
   
-  <ion-card *ngIf="produtosContabilizados.length === 0"  >
+  <!-- <ion-card *ngIf="produtosEmpresa.length === 0"  >
      
     <ion-card-content>
       <ion-card-title>
@@ -27,13 +27,13 @@
       </ion-card-title>
       
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 
 
     <ion-list>
-        <button ion-item *ngFor="let produto of produtosContabilizados" (click)="atualizarProduto(produto)">        
-            <h2> {{produto.produto.descricao}} </h2>
-            <h3> Quantidade: {{produto.qtd}}</h3>
+        <button ion-item *ngFor="let produto of produtosEmpresa" (click)="atualizarProduto(produto)">        
+            <h2> {{produto.descricao}} </h2>
+            <h3> Código de barras: {{produto.codbarra}} | Unidade: {{produto.un}} </h3>
         </button>  
     </ion-list>
 

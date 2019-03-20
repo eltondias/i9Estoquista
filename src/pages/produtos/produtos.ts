@@ -1,11 +1,13 @@
+import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { ApiProdutoEmpresaProvider } from './../../providers/api-produto-empresa/api-produto-empresa';
 import { IncrementarPage } from './../incrementar/incrementar';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, AlertController, LoadingController, Loading } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, Tabs, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
 import { Storage } from '@ionic/storage';
+
 /**
- * Generated class for the ProdutosContabilizadosPage page.
+ * Generated class for the ProdutosPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -13,10 +15,10 @@ import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
-  selector: 'page-produtos-contabilizados',
-  templateUrl: 'produtos-contabilizados.html',
+  selector: 'page-produtos',
+  templateUrl: 'produtos.html',
 })
-export class ProdutosContabilizadosPage {
+export class ProdutosPage {
 
   produtosContabilizados: UsrProdutoEmpresa[] = [];
   cnpj: string;
@@ -27,51 +29,45 @@ export class ProdutosContabilizadosPage {
       public navCtrl: NavController, 
       public navParams: NavParams,
       private storage: Storage,
+      private app: App,
       private api: ApiProdutoEmpresaProvider,
       public alertController: AlertController,
-      public loadingCtrl: LoadingController
+      public loadingCtrl: LoadingController,
+      public apiEmpresa: ApiEmpresaProvider,
       ) {
   }
 
   ionViewWillEnter() {
-    this.inicializar();
+    // this.inicializar();
   }
 
   ionViewDidLoad() {
     this.inicializar();
   }
 
+
   async getCnpj(){
     this.cnpj =  await this.storage.get('cnpj');
   }
 
   async getProdutosEmpresa(){
-
-    this.api.getListaProdutos( this.cpf,this.cnpj ).subscribe(produtos => {
-      // this.produtosEmpresa = <UsrProdutoEmpresa[]>produtos;
-    });
-
     this.produtosEmpresa =  await this.storage.get('produtos_' + this.cnpj);
+    console.log(this.produtosEmpresa );
+    // this.api.getListaProdutos( this.cpf,this.cnpj ).subscribe(produtos => {
+    //   // this.produtosEmpresa = <UsrProdutoEmpresa[]>produtos;
+    // });
   }
   
-  async getProdutosContabilizados() {
-    this.produtosContabilizados =  await this.storage.get('produtosContabilizados_' + this.cnpj);
-    // if (this.produtosContabilizados.length === 0) {
-    //   const tabsNav = this.app.getNavByIdOrName('myTabsNav') as Tabs;
-    //   tabsNav.select(1);      
-    // }
-  }
+ 
 
   inicializar(){
-    console.log('ProdutosContabilizadosPage');
     this.getCnpj().then( () => {
       this.getProdutosEmpresa();
-      this.getProdutosContabilizados();
     });
   }
 
   atualizarProduto(produto) {
-    const  produtoSelecionado = this.produtosEmpresa.find( x => x.id == produto.produto.id);
+    const  produtoSelecionado = this.produtosEmpresa.find( x => x.id == produto.id);
     this.navCtrl.push(IncrementarPage, { produtoSelecionado:  produtoSelecionado });
     console.log(produto);
   }
@@ -97,27 +93,12 @@ export class ProdutosContabilizadosPage {
 
 
   sincronizarProdutos() {
-    const loading = this.loading("Exportando...", 30000000);
-    
-   this.storage.get('produtosContabilizados_' + this.cnpj).then(produtos => {
-    
-    this.api.cadastrarListaProdutos(produtos)
-    .then(response => {
-        this.storage.set('produtosContabilizados_' + this.cnpj, []).then(() => {
-        this.produtosContabilizados = [];
-        loading.dismiss();
-        this.showAlert('Exportação realizada com sucesso', '', ['OK']);
-    });
-    })
-    .catch(error => {
-      console.log(error);
+    const loading = this.loading("Carregando produtos...", 30000000);
+    this.apiEmpresa.getProdutosEmpresa(this.cnpj).subscribe( (produtos: any[]) => {
       loading.dismiss();
-      this.showAlert('Erro ao realizada exportação.', 'Tente novamente', ['OK']);
+      this.storage.set('produtos_' + this.cnpj, produtos); 
+      this.inicializar();   
     });
-    
-   });
-
-  
-  }
+ }
 
 }

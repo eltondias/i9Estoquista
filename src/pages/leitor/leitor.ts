@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { IncrementarPage } from '../incrementar/incrementar';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 @Component({
   selector: 'page-leitor',
@@ -17,7 +18,9 @@ export class LeitorPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
-    private storage: Storage
+    private storage: Storage,
+    private barcodeScanner: BarcodeScanner,
+    public alertController: AlertController,
     ) {
   }
 
@@ -26,11 +29,18 @@ export class LeitorPage {
         this.getProdutos();
     });
   }
+  ionViewWillEnter() {
+    console.log('ativarScanner -  ionViewWillEnter')
+  }
+
+
 
   buscarProduto() {
-    this.produtoSelecionado = this.produtos.find( x => x.id == this.codigoProduto);
+    this.produtoSelecionado = this.produtos.find( x => x.codbarra == this.codigoProduto);
     if (this.produtoSelecionado) {
       this.navCtrl.push(IncrementarPage, { produtoSelecionado:  this.produtoSelecionado });
+    } else {
+      this.showAlert('Produto não encontrado', 'verifique o código barras', ['OK']);
     }
   }
 
@@ -40,6 +50,25 @@ export class LeitorPage {
 
   async getEmpresa(){
     this.empresaSelecionada =  await this.storage.get('empresa');
+  }
+
+  ativarScanner() {
+    this.barcodeScanner.scan().then(barcodeData => {
+      this.codigoProduto =  barcodeData.text;+
+      this.buscarProduto();
+      // this.showAlert('Código de barras', barcodeData.text, ['OK']);
+     }).catch(err => {
+         this.showAlert('Erro', err, ['OK']);
+     });
+  }
+
+  showAlert(title, subTitle, buttons: any[]  ) {
+    const alert = this.alertController.create({
+      title: title,
+      subTitle: subTitle,
+      buttons: buttons
+    });
+    alert.present();
   }
 
 }

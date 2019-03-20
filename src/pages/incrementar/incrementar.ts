@@ -105,13 +105,10 @@ export class IncrementarPage {
 
     const tabsNav = this.app.getNavByIdOrName('myTabsNav') as Tabs;
 
-    if (this.navCtrl.id === 't0-1') {
+    if (this.navCtrl.id === 't0-1' || this.navCtrl.id === 't0-2') {
       tabsNav.select(0);
     } 
-
     this.navCtrl.pop();
-    
 
-   
   }
 }

@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class Api {
-  // url: string = 'http://162.243.79.216:8090';
-  url: string = 'http://10.0.0.154:8090';
+  url: string = 'http://162.243.79.216:8090';
+  //url: string = 'http://10.0.0.154:8090';
 
   constructor(protected http: HttpClient) {
   }

@@ -1,3 +1,5 @@
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { ProdutosPageModule } from './../pages/produtos/produtos.module';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -18,11 +20,12 @@ import { IonicStorageModule } from '@ionic/storage';
 import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ApiProdutoEmpresaProvider } from '../providers/api-produto-empresa/api-produto-empresa';
+import { LoginPageModule } from '../pages/login/login.module';
 
 @NgModule({
   declarations: [
     MyApp,
-    LoginPage,
+    // LoginPage,
     SelecionarEmpresaPage,
     LeitorPage,
     ProdutosContabilizadosPage,
@@ -34,7 +37,9 @@ import { ApiProdutoEmpresaProvider } from '../providers/api-produto-empresa/api-
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     HttpClientModule,
-    IncrementarPageModule
+    IncrementarPageModule,
+    LoginPageModule,
+    ProdutosPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -53,7 +58,8 @@ import { ApiProdutoEmpresaProvider } from '../providers/api-produto-empresa/api-
     ApiEmpresaProvider,
     AppService,
     FirestoreService,
-    ApiProdutoEmpresaProvider
+    ApiProdutoEmpresaProvider,
+    BarcodeScanner 
   ]
 })
 export class AppModule {}

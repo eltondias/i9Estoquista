@@ -1,5 +1,4 @@
 import { UsrProdutoEmpresa } from './../../model/UsrProdutoEmpresa';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Api } from '../api';
 
@@ -14,8 +13,25 @@ export class ApiProdutoEmpresaProvider extends Api {
 
   super() {}
 
-  cadastrarListaProdutos(produtos: UsrProdutoEmpresa[]) {
-    return this.post('/estoque-api/cadastrar-lista-produtos', produtos);
+  cadastrarListaProdutos(produtos: UsrProdutoEmpresa[], callback?) {
+      const cb = callback || function() {};
+      return new Promise((resolve, reject) => {
+        this.post('estoque-api/cadastrar-lista-produtos', produtos).subscribe(
+            data => {
+                resolve(data);
+                return cb();
+            },
+            err => {
+                reject(err);
+                return cb(err);
+            }
+        );
+    });
+  }
+  
+  getListaProdutos(cpf, cnpj) {
+    
+    return this.get('estoque-api/lista-produtos-usuario/' + cpf + '/' + cnpj );
   }
 
 }
