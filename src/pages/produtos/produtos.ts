@@ -1,8 +1,8 @@
 import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { ApiProdutoEmpresaProvider } from './../../providers/api-produto-empresa/api-produto-empresa';
 import { IncrementarPage } from './../incrementar/incrementar';
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, Tabs, AlertController, LoadingController, Loading } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, App, Tabs, AlertController, LoadingController, Loading, InfiniteScroll } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
 import { Storage } from '@ionic/storage';
 
@@ -24,6 +24,12 @@ export class ProdutosPage {
   cnpj: string;
   cpf: string;
   produtosEmpresa: any[];
+  produtosListados = [];
+  limitItems = 10;
+  pageActual = 1;
+  searchTerm : any="";
+  @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
+  
 
   constructor(
       public navCtrl: NavController, 
@@ -45,6 +51,17 @@ export class ProdutosPage {
     this.inicializar();
   }
 
+  filtrarProdutos(event) {
+    console.log(this.searchTerm);
+    this.pageActual = 1;
+    this. produtosListados = [];
+    const result =  this.produtosEmpresa.filter((item) => {
+        return item.descricao.toLowerCase().includes(this.searchTerm.toLowerCase());
+    });  
+
+    this.loadingProdutos(result);
+    
+  }
 
   async getCnpj(){
     this.cnpj =  await this.storage.get('cnpj');
@@ -52,13 +69,45 @@ export class ProdutosPage {
 
   async getProdutosEmpresa(){
     this.produtosEmpresa =  await this.storage.get('produtos_' + this.cnpj);
-    console.log(this.produtosEmpresa );
-    // this.api.getListaProdutos( this.cpf,this.cnpj ).subscribe(produtos => {
-    //   // this.produtosEmpresa = <UsrProdutoEmpresa[]>produtos;
-    // });
+    this.loadingProdutos(this.produtosEmpresa);
   }
   
+
+  loadingProdutos(lista) {
+    console.log(lista);
+    const produtos =  this.listItems(lista, this.pageActual, this.limitItems);
+    produtos.forEach(produto => {
+      this.produtosListados.push(produto);
+    });
+    this.infiniteScroll.complete();
+  }
+
+  ativarScroll(){
+    this.loadingProdutos(this.produtosEmpresa);
+  }
+
+
+  listItems(items, pageActual, limitItems){
+    let result = [];
+    let totalPage = Math.ceil( items.length / limitItems );
+    let count = ( pageActual * limitItems ) - limitItems;
+    let delimiter = count + limitItems;
+    
+    if(pageActual <= totalPage){
+        for(let i=count; i<delimiter; i++){
+            if(items[i] != null){
+                result.push(items[i]);
+            }
+            count++;
+        }
+    }
+
+    this.pageActual++;
+
+    return result;
+};
  
+
 
   inicializar(){
     this.getCnpj().then( () => {

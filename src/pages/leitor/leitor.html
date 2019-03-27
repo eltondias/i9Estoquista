@@ -11,24 +11,15 @@
 <ion-content padding id="page7">
 
   <ion-searchbar [(ngModel)]="codigoProduto" type="tel" placeholder="Código produto"></ion-searchbar>
-
-  <button id="login-button1" ion-button color="light" block (click)="buscarProduto()">
-    Buscar
+  
+  <button   ion-button color="balanced" block style="color:#FFFFFF;" (click)="buscarProduto()" >
+   Buscar
   </button>
 
-
-  <ion-card>
-    <img src="assets/img/barcode-scanner.png" width="70%"/>
-    <ion-card-content>
-      <ion-card-title>
-     
-        <button   ion-button color="balanced" block style="color:#FFFFFF;"  (click)="ativarScanner()" >
-          Usar leitor
-        </button>
-      </ion-card-title>
-       
-    </ion-card-content>
-  </ion-card>
+  <ion-fab center middle>
+      Usar leitor 
+    <button ion-fab color="danger" (click)="ativarScanner()"><ion-icon name="barcode"></ion-icon></button>
+  </ion-fab>
 
 
 </ion-content>

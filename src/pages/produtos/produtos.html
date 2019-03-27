@@ -3,9 +3,16 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>
+    <!-- <ion-title>
       Produtos cadastrados
-    </ion-title>
+    </ion-title> -->
+    <ion-searchbar
+    placeholder="Consultar por descrição"
+    [(ngModel)]="searchTerm"
+    (ionInput)="filtrarProdutos($event)"
+    animated
+    >
+  </ion-searchbar>
 
     <ion-buttons end>
       <button ion-button icon-only  (click)="sincronizarProdutos()">
@@ -17,25 +24,24 @@
 </ion-header>
 
 <ion-content padding>
+   
 
-  
-  <!-- <ion-card *ngIf="produtosEmpresa.length === 0"  >
-     
-    <ion-card-content>
-      <ion-card-title>
-        Não há produtos contabilizados 
-      </ion-card-title>
-      
-    </ion-card-content>
-  </ion-card> -->
-
-
-    <ion-list>
-        <button ion-item *ngFor="let produto of produtosEmpresa" (click)="atualizarProduto(produto)">        
+    
+      <ion-list>
+        <button ion-item *ngFor="let produto of produtosListados" (click)="atualizarProduto(produto)">        
             <h2> {{produto.descricao}} </h2>
             <h3> Código de barras: {{produto.codbarra}} | Unidade: {{produto.un}} </h3>
         </button>  
     </ion-list>
+    
+      <ion-infinite-scroll  (ionInfinite)="ativarScroll($event)">
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="Carregando produtos">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    
+
 
     
 

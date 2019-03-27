@@ -79,11 +79,19 @@ export class SelecionarEmpresaPage {
 
   getProdutosEmpresa(cnpj) {
     const loading = this.loading("Carregando produtos...", 30000000);
-    this.apiEmpresa.getProdutosEmpresa(cnpj).subscribe( (produtos: any[]) => {
-      loading.dismiss();
-      this.storage.set('produtos_' + cnpj, produtos);
-      this.navCtrl.push(TabsPage);
-    });
+    this.apiEmpresa.getProdutosEmpresa(cnpj).subscribe( 
+      (produtos: any[]) => {
+        loading.dismiss();
+        this.storage.set('produtos_' + cnpj, produtos);
+        this.navCtrl.push(TabsPage);
+      }, 
+      err => {
+          loading.dismiss();
+          alert('Ocorreu erro inesperado. Selecione a empresa novamente')
+          console.log(err);
+      },
+      () => console.log('Observable completed!')    
+    );
  }
 
 }
