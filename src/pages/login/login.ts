@@ -1,6 +1,6 @@
 import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { Component } from '@angular/core';
-import { NavController, IonicPage, LoadingController, Loading } from 'ionic-angular';
+import { NavController, IonicPage, LoadingController, Loading, AlertController } from 'ionic-angular';
 import { SelecionarEmpresaPage } from '../selecionar-empresa/selecionar-empresa';
 import { ApiUsuarioProvider } from './../../providers/api-usuario/api-usuario';
 import { FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
@@ -25,13 +25,13 @@ export class LoginPage {
     private formBuilder: FormBuilder,
     private storage: Storage,
     public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController
      ) {
        
-      this.login =  '67374212291';
-      this.senha = 'a'; 
+      // this.login =  '67374212291';
+      // this.senha = 'a'; 
 
       this.storage.get('cpf').then( cpf => {
-        console.log(cpf);
         if (cpf) {
             this.navCtrl.push(SelecionarEmpresaPage);
         }
@@ -66,24 +66,39 @@ export class LoginPage {
     const loading = this.loading("Aguarde...", 30000000);
   
     this.apiUsuario.login( this.login.toString(), this.senha.toString()).subscribe( (empresas:any[]) => {
-      this.storage.set('cpf', this.login);
+      
       loading.dismiss();
-      empresas.forEach(empresa => {
-        this.apiEmpresa.getEmpresa(empresa.cadUsuario.cadUsuarioPK.cnpjEmpresa).subscribe( empresa => {
-          this.empresaList.push(empresa);
-          if (empresas.length === this.empresaList.length) {
-            this.storage.set('empresas', this.empresaList).then(() => {
-              this.navCtrl.push(SelecionarEmpresaPage, { empresas: this.empresaList });
-            });
-          }
+
+      if(empresas.length > 0) {
+        this.storage.set('cpf', this.login);
+        empresas.forEach(empresa => {
+          this.apiEmpresa.getEmpresa(empresa.cadUsuario.cadUsuarioPK.cnpjEmpresa).subscribe( empresa => {
+            this.empresaList.push(empresa);
+            if (empresas.length === this.empresaList.length) {
+              this.storage.set('empresas', this.empresaList).then(() => {
+                this.navCtrl.push(SelecionarEmpresaPage, { empresas: this.empresaList });
+              });
+            }
+          });
         });
-      });
+      } else {
+       this.showAlert();
+      }
+
+     
 
     });
   }
 
 
-
+  showAlert() {
+    const alert = this.alertCtrl.create({
+      title: 'Erro de autenticação',
+      subTitle: 'Usuário ou senha inválidos!',
+      buttons: ['Fechar']
+    });
+    alert.present();
+  }
 
   goToSelecionarEmpresa(params){
     if (!params) params = {};

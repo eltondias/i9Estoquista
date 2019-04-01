@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, Tabs, ViewController } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
 import { Storage } from '@ionic/storage';
  
@@ -28,13 +28,15 @@ export class IncrementarPage {
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private storage: Storage,
-    private app: App
+    private app: App,
+    public viewCtrl: ViewController
     ) {
    
      
   }
 
   ionViewDidLoad() {
+    
     this.produtoSelecionado  =  this.navParams.get("produtoSelecionado");
     this.getCpfCnpj().then(() => {
       if ( this.produtoSelecionado) {
@@ -102,13 +104,33 @@ export class IncrementarPage {
   
   confirmar() {
     this.setProdutosContabilizados();
+    this.setTab();
+  }
 
-    const tabsNav = this.app.getNavByIdOrName('myTabsNav') as Tabs;
+  descartar() {
+    const indice =  this.produtosContabilizados.indexOf(this.produto);
+    
+    if (indice !== -1) {
+      this.produtosContabilizados.splice(indice, 1);
+      this.storage.set('produtosContabilizados_' + this.cnpj, this.produtosContabilizados);
+    }
 
+    this.setTab();
+  }
+
+  setTab() {
+    const tabsNav = this.app.getNavByIdOrName('myTabsNav') as Tabs
     if (this.navCtrl.id === 't0-1' || this.navCtrl.id === 't0-2') {
       tabsNav.select(0);
     } 
     this.navCtrl.pop();
-
   }
+
+
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
+
+
 }

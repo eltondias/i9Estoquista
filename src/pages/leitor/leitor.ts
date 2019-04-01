@@ -30,7 +30,7 @@ export class LeitorPage {
     });
   }
   ionViewWillEnter() {
-    console.log('ativarScanner -  ionViewWillEnter')
+    // console.log('ativarScanner -  ionViewWillEnter')
   }
 
 

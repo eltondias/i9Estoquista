@@ -52,7 +52,6 @@ export class ProdutosPage {
   }
 
   filtrarProdutos(event) {
-    console.log(this.searchTerm);
     this.pageActual = 1;
     this. produtosListados = [];
     const result =  this.produtosEmpresa.filter((item) => {
@@ -74,7 +73,6 @@ export class ProdutosPage {
   
 
   loadingProdutos(lista) {
-    console.log(lista);
     const produtos =  this.listItems(lista, this.pageActual, this.limitItems);
     produtos.forEach(produto => {
       this.produtosListados.push(produto);
@@ -118,7 +116,6 @@ export class ProdutosPage {
   atualizarProduto(produto) {
     const  produtoSelecionado = this.produtosEmpresa.find( x => x.id == produto.id);
     this.navCtrl.push(IncrementarPage, { produtoSelecionado:  produtoSelecionado });
-    console.log(produto);
   }
 
 
