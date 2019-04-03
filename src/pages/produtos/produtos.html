@@ -26,13 +26,28 @@
 <ion-content padding>
    
 
+
+  
+    <button ion-item  *ngFor="let produto of produtosListados"  (click)="atualizarProduto(produto)">
+      <ion-avatar item-start>         
+         
+          <button ion-button clear> {{produto.id}} </button>
+      </ion-avatar>
+      <h2> {{produto.descricao}} </h2>
+      <h3> Fator: {{produto.fator}}  | Unidade: {{produto.un}} </h3>
+      <p>Código de barras: {{produto.codbarra}}</p>
+    </button>
+   
+
+
+
     
-      <ion-list>
+      <!-- <ion-list>
         <button ion-item *ngFor="let produto of produtosListados" (click)="atualizarProduto(produto)">        
             <h2> {{produto.descricao}} </h2>
             <h3> Código de barras: {{produto.codbarra}} | Unidade: {{produto.un}} </h3>
         </button>  
-    </ion-list>
+    </ion-list> -->
     
       <ion-infinite-scroll  (ionInfinite)="ativarScroll($event)">
         <ion-infinite-scroll-content

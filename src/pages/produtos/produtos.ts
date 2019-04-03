@@ -2,7 +2,7 @@ import { ApiEmpresaProvider } from './../../providers/api-empresa/api-empresa';
 import { ApiProdutoEmpresaProvider } from './../../providers/api-produto-empresa/api-produto-empresa';
 import { IncrementarPage } from './../incrementar/incrementar';
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, Tabs, AlertController, LoadingController, Loading, InfiniteScroll } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, Tabs, AlertController, LoadingController, Loading, InfiniteScroll, ModalController } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
 import { Storage } from '@ionic/storage';
 
@@ -40,6 +40,7 @@ export class ProdutosPage {
       public alertController: AlertController,
       public loadingCtrl: LoadingController,
       public apiEmpresa: ApiEmpresaProvider,
+      public modalCtrl: ModalController
       ) {
   }
 
@@ -115,7 +116,10 @@ export class ProdutosPage {
 
   atualizarProduto(produto) {
     const  produtoSelecionado = this.produtosEmpresa.find( x => x.id == produto.id);
-    this.navCtrl.push(IncrementarPage, { produtoSelecionado:  produtoSelecionado });
+    // this.navCtrl.push(IncrementarPage, { produtoSelecionado:  produtoSelecionado });
+
+    const modal = this.modalCtrl.create(IncrementarPage, { produtoSelecionado: produtoSelecionado });
+    modal.present();
   }
 
 

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Incrementar
+      Atualizar quantidade
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -21,7 +21,10 @@
             {{produtoSelecionado.descricao}}
           </ion-card-title>
           <p>
-            {{produtoSelecionado.descricao2}}
+              Código de barras: {{produtoSelecionado.codbarra}}
+          </p>
+          <p>
+              Código de produto: {{produtoSelecionado.id}}
           </p>
     
     
@@ -47,6 +50,10 @@
           </ion-grid>
     
     
+          <ion-item>
+              <ion-label> Voltar ao leitor ao confirmar </ion-label>
+              <ion-checkbox  checked="false" [(ngModel)]="modoRapido"  ></ion-checkbox>
+            </ion-item>
     
         </ion-card-content>
     

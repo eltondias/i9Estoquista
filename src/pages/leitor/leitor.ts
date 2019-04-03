@@ -3,6 +3,7 @@ import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { IncrementarPage } from '../incrementar/incrementar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { UtilProvider } from '../../providers/util/util';
 
 @Component({
   selector: 'page-leitor',
@@ -21,7 +22,11 @@ export class LeitorPage {
     private storage: Storage,
     private barcodeScanner: BarcodeScanner,
     public alertController: AlertController,
+    public util: UtilProvider 
     ) {
+      this.util.ativarScannerEmiter.subscribe(() => {
+        this.ativarScanner(); 
+      });
   }
 
   ionViewDidLoad() {
@@ -39,8 +44,14 @@ export class LeitorPage {
     this.produtoSelecionado = this.produtos.find( x => x.codbarra == this.codigoProduto);
     if (this.produtoSelecionado) {
       this.navCtrl.push(IncrementarPage, { produtoSelecionado:  this.produtoSelecionado });
-    } else {
-      this.showAlert('Produto não encontrado', 'verifique o código barras', ['OK']);
+    } else  {
+      this.produtoSelecionado = this.produtos.find( x => x.id == this.codigoProduto);
+
+      if (this.produtoSelecionado) {
+        this.navCtrl.push(IncrementarPage, { produtoSelecionado:  this.produtoSelecionado });
+      } else {
+        this.util.showAlert('Produto não encontrado', 'verifique o código barras', ['OK']);
+      } 
     }
   }
 
@@ -58,17 +69,9 @@ export class LeitorPage {
       this.buscarProduto();
       // this.showAlert('Código de barras', barcodeData.text, ['OK']);
      }).catch(err => {
-         this.showAlert('Erro', err, ['OK']);
+         this.util.showAlert('Erro', err, ['OK']);
      });
   }
-
-  showAlert(title, subTitle, buttons: any[]  ) {
-    const alert = this.alertController.create({
-      title: title,
-      subTitle: subTitle,
-      buttons: buttons
-    });
-    alert.present();
-  }
+ 
 
 }

@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { Storage } from '@ionic/storage';
+import { UtilProvider } from '../providers/util/util';
 
 @Component({
   templateUrl: 'app.html'
@@ -14,30 +15,32 @@ export class MyApp {
 
 
     pages: any[] = [
-      { title: 'Sair', component: 'LoginPage' },
-      // { title: 'Tutorial', component: 'TutorialPage' },
-      // { title: 'Sobre', component: 'SobrePage' },
-      // { title: 'Sair', component: 'SignoutPage' }
+      { title: 'Sobre', component: 'SobrePage' },
+      { title: 'Sair', component: 'LoginPage' }
     ]
 
   constructor(
       platform: Platform, 
       statusBar: StatusBar, 
       splashScreen: SplashScreen,
-      private storage: Storage
+      private storage: Storage,
+      public util: UtilProvider 
       ) {
+
+      
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
     });
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.navCtrl.setRoot(page.component);
+    if (page.component === 'LoginPage') {
+      this.sair();
+    } else {
+      this.navCtrl.setRoot(page.component);
+    }
+   
   }
 
   sair() {

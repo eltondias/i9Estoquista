@@ -1,7 +1,10 @@
+import { ProdutosContabilizadosPage } from './../produtos-contabilizados/produtos-contabilizados';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, Tabs, ViewController } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
 import { Storage } from '@ionic/storage';
+import { TabsPage } from '../tabs/tabs';
+import { UtilProvider } from '../../providers/util/util';
  
 
 /**
@@ -23,20 +26,23 @@ export class IncrementarPage {
   produto: UsrProdutoEmpresa;
   cpf: string;
   cnpj: string;
+  modoRapido = false;
+  pageOrigem: string;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private storage: Storage,
     private app: App,
-    public viewCtrl: ViewController
+    public viewCtrl: ViewController,
+    public util: UtilProvider 
     ) {
-   
-     
+
+      this.getModoRapido();
   }
 
-  ionViewDidLoad() {
-    
+  ionViewDidLoad() {    
+    this.pageOrigem  =  this.navParams.get("origem");
     this.produtoSelecionado  =  this.navParams.get("produtoSelecionado");
     this.getCpfCnpj().then(() => {
       if ( this.produtoSelecionado) {
@@ -90,6 +96,10 @@ export class IncrementarPage {
     this.produtosContabilizados =  await this.storage.get('produtosContabilizados_' + this.cnpj);
   }
 
+  async getModoRapido() {
+    this.modoRapido =  await  this.storage.get('modoRapido');
+  }
+
   incrementar() {
     this.produto.qtd++;
   }
@@ -119,11 +129,29 @@ export class IncrementarPage {
   }
 
   setTab() {
+    console.log( this.modoRapido);
+    this.storage.set('modoRapido', this.modoRapido);
+
+    if( this.pageOrigem === 'ProdutosContabilizadosPage') {
+      this.util.atualizarProdutosContabilizadosEmiter.emit();
+    }
+    
+    
     const tabsNav = this.app.getNavByIdOrName('myTabsNav') as Tabs
-    if (this.navCtrl.id === 't0-1' || this.navCtrl.id === 't0-2') {
-      tabsNav.select(0);
+    console.log(this.navCtrl.id);
+    if (this.navCtrl.id === 't0-1' || this.navCtrl.id === 't0-2' || this.navCtrl.id === 'n0') {
+      
+      if(this.modoRapido) {
+        tabsNav.select(1);
+        setTimeout(() => {
+          this.util.ativarScannerEmiter.emit();
+        }, 500);
+      } else {
+        tabsNav.select(0);
+      }
+     
     } 
-    this.navCtrl.pop();
+    this.viewCtrl.dismiss();
   }
 
 

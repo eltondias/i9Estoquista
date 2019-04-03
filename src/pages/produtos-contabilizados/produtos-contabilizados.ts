@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, NavParams, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { UsrProdutoEmpresa } from '../../model/UsrProdutoEmpresa';
 import { Storage } from '@ionic/storage';
+import { UtilProvider } from '../../providers/util/util';
 
 @IonicPage()
 @Component({
@@ -23,16 +24,34 @@ export class ProdutosContabilizadosPage {
     private storage: Storage,
     private api: ApiProdutoEmpresaProvider,
     public alertController: AlertController,
-    public loadingCtrl: LoadingController,
-    public modalCtrl: ModalController
+
+    public modalCtrl: ModalController,
+    public util: UtilProvider
   ) {
+    this.util.atualizarProdutosContabilizadosEmiter.subscribe(() => {
+      console.log('atualizarProdutosContabilizadosEmiter');
+      // const loading = this.util.loading("Aguarde...", 30000000);
+      this.getCnpj().then(() => {    
+        this.getProdutosContabilizados();   
+        // loading.dismiss();  
+        
+      });
+    });
   }
 
   ionViewWillEnter() {
-    this.inicializar();
+    
+    console.log('ionViewWillEnter');
+    const loading = this.util.loading("Aguarde...", 30000000);
+    this.getCnpj().then(() => {    
+      this.getProdutosContabilizados();   
+      loading.dismiss();  
+    });
+    // this.inicializar();
   }
 
   ionViewDidLoad() {
+    console.log('ionViewDidLoad');
     this.inicializar();
   }
 
@@ -40,11 +59,16 @@ export class ProdutosContabilizadosPage {
     this.cnpj = await this.storage.get('cnpj');
   }
 
-  async getProdutosEmpresa() {
+  getProdutosEmpresa(loading) {
     // this.api.getListaProdutos( this.cpf,this.cnpj ).subscribe(produtos => {
     //   // this.produtosEmpresa = <UsrProdutoEmpresa[]>produtos;
     // });
-    this.produtosEmpresa = await this.storage.get('produtos_' + this.cnpj);
+
+    this.storage.get('produtos_' + this.cnpj).then((produtos) =>  {
+      this.produtosEmpresa = produtos;
+      loading.dismiss();
+    });
+    
   }
 
   async getProdutosContabilizados() {
@@ -52,51 +76,33 @@ export class ProdutosContabilizadosPage {
   }
 
   inicializar() {
+    const loading = this.util.loading("Aguarde...", 30000000);
     this.getCnpj().then(() => {
-      this.getProdutosEmpresa();
+      this.getProdutosEmpresa(loading);
       this.getProdutosContabilizados();
     });
   }
 
   atualizarProduto(produto) {
     const produtoSelecionado = this.produtosEmpresa.find(x => x.id == produto.produto.id);
-    this.navCtrl.push(IncrementarPage, { produtoSelecionado: produtoSelecionado });
+    const modal = this.modalCtrl.create(IncrementarPage, { produtoSelecionado: produtoSelecionado, origem: 'ProdutosContabilizadosPage' });
+    modal.present();
   }
-
-
-  showAlert(title, subTitle, buttons: any[]) {
-    const alert = this.alertController.create({
-      title: title,
-      subTitle: subTitle,
-      buttons: buttons
-    });
-    alert.present();
-  }
-
-  loading(mensagem, duracao): Loading {
-    const loader = this.loadingCtrl.create({
-      content: mensagem,
-      duration: duracao
-    });
-    loader.present();
-    return loader;
-  }
-
 
   sincronizarProdutos() {
-    const loading = this.loading("Exportando...", 30000000);
+    const loading = this.util.loading("Exportando...", 30000000);
     this.storage.get('produtosContabilizados_' + this.cnpj).then(produtos => {
       this.api.cadastrarListaProdutos(produtos)
         .then(response => {
           this.storage.set('produtosContabilizados_' + this.cnpj, []).then(() => {
             this.produtosContabilizados = [];
             loading.dismiss();
-            this.showAlert('Exportação realizada com sucesso', '', ['OK']);
+            this.util.showAlert('Exportação realizada com sucesso', '', ['OK']);
           });
         })
         .catch(error => {
           loading.dismiss();
-          this.showAlert('Erro ao realizada exportação.', 'Tente novamente', ['OK']);
+          this.util.showAlert('Erro ao realizada exportação.', 'Tente novamente', ['OK']);
         });
 
     });

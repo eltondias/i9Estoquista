@@ -21,6 +21,9 @@ import { IncrementarPageModule } from '../pages/incrementar/incrementar.module';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ApiProdutoEmpresaProvider } from '../providers/api-produto-empresa/api-produto-empresa';
 import { LoginPageModule } from '../pages/login/login.module';
+import { UtilProvider } from '../providers/util/util';
+import { ProdutosContabilizadosPageModule } from '../pages/produtos-contabilizados/produtos-contabilizados.module';
+import { ProdutosPage } from '../pages/produtos/produtos';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,7 @@ import { LoginPageModule } from '../pages/login/login.module';
     // LoginPage,
     SelecionarEmpresaPage,
     LeitorPage,
-    ProdutosContabilizadosPage,
+    // ProdutosContabilizadosPage,
     TabsPage
   ],
   imports: [
@@ -39,7 +42,8 @@ import { LoginPageModule } from '../pages/login/login.module';
     HttpClientModule,
     IncrementarPageModule,
     LoginPageModule,
-    ProdutosPageModule
+    ProdutosPageModule,
+    ProdutosContabilizadosPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -47,7 +51,8 @@ import { LoginPageModule } from '../pages/login/login.module';
     LoginPage,
     SelecionarEmpresaPage,
     LeitorPage,
-    ProdutosContabilizadosPage,
+    // ProdutosContabilizadosPage,
+    // ProdutosPage,
     TabsPage
   ],
   providers: [
@@ -59,7 +64,8 @@ import { LoginPageModule } from '../pages/login/login.module';
     AppService,
     FirestoreService,
     ApiProdutoEmpresaProvider,
-    BarcodeScanner 
+    BarcodeScanner,
+    UtilProvider 
   ]
 })
 export class AppModule {}

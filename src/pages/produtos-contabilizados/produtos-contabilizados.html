@@ -30,12 +30,15 @@
   </ion-card>
 
 
-    <ion-list>
+    
         <button ion-item *ngFor="let produto of produtosContabilizados" (click)="atualizarProduto(produto)">        
+            <ion-avatar item-end>            
+                <button ion-fab mini>    {{produto.qtd}} </button>
+            </ion-avatar>
             <h2> {{produto.produto.descricao}} </h2>
-            <h3> Quantidade: {{produto.qtd}}</h3>
+            <p>Código de produto: {{produto.produto.id}} </p>
         </button>  
-    </ion-list>
+    
 
     
 

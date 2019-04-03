@@ -1,3 +1,4 @@
+import { UtilProvider } from './../../providers/util/util';
 import { SelecionarEmpresaPage } from './../selecionar-empresa/selecionar-empresa';
 import { ProdutosContabilizadosPage } from './../produtos-contabilizados/produtos-contabilizados';
 import { Component } from '@angular/core';
@@ -19,11 +20,17 @@ export class TabsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public util: UtilProvider 
   ) {
 
-    // if (this.navParams.get("page")) {
-    //   this.tab1Root = this.navParams.get("page");
-    // }
+    if (this.navParams.get("page")) {
+      this.tab1Root = this.navParams.get("page");
+    }
+
+    // this.util.atualizarTabsEmiter.subscribe( page => {
+    //   console.log(page);
+    //   this.tab1Root = page;
+    // });
 
   }
 }

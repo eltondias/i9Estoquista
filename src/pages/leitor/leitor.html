@@ -10,16 +10,15 @@
 </ion-header>
 <ion-content padding id="page7">
 
-  <ion-searchbar [(ngModel)]="codigoProduto" type="tel" placeholder="Código produto"></ion-searchbar>
+  <ion-searchbar [(ngModel)]="codigoProduto" type="number" placeholder="Código barras ou produto "></ion-searchbar>
   
   <button   ion-button color="balanced" block style="color:#FFFFFF;" (click)="buscarProduto()" >
    Buscar
   </button>
 
   <ion-fab center middle>
-      Usar leitor 
+      Usar leitor  
     <button ion-fab color="danger" (click)="ativarScanner()"><ion-icon name="barcode"></ion-icon></button>
   </ion-fab>
-
 
 </ion-content>
