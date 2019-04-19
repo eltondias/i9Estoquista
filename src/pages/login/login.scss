@@ -1,3 +1,26 @@
 page-login {
+    .sobre {
+        margin: -19px -8px -9px -17px;
+        width: 112%;
+        height: 107%;
+        background-image: url(/assets/img/login.png);
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 
+    .item-input .label-md, .item-select .label-md, .item-datetime .label-md {
+        color: #fff;
+    }
+
+    .item-md {
+        background: none;
+        color: #fff;
+    }
+
+    form {
+        padding: 46px;
+        margin-top: 45%;
+    }
 }

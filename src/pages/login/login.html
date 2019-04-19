@@ -1,16 +1,7 @@
-<ion-content padding id="page5">
+<ion-content padding id="page5" class="sobre">
 
-  <div class="spacer" style="width:300px;height:36px;" id="login-spacer2"></div>
-  <img src="assets/img/BnswJ99CR5Cmz4ezNnSA_stock.png"
-    style="display:block;width:40%;height:auto;margin-left:auto;margin-right:auto;" />
-  <!-- <h3 id="login-heading1" style="color:#000000;text-align:center;">
-    i9Estoquista
-  </h3> -->
-  <div class="spacer" style="width:300px;height:36px;" id="login-spacer2"></div>
-
-
-
-
+  <!-- <div class="spacer" style="width:300px;height:30%;" id="login-spacer2"></div> -->
+ 
   <form [formGroup]="formDeValidacao" (ngSubmit)="entrar()">
     <ion-list id="login-list1">
 
@@ -50,7 +41,7 @@
 
     </ion-list>
     <div class="spacer" id="login-spacer1"></div>
-    <button id="login-button1" ion-button color="balanced" block style="color:#FFFFFF;"  [disabled]="formDeValidacao.invalid">
+    <button id="login-button1" ion-button color="light" block   [disabled]="formDeValidacao.invalid">
       Entrar
     </button>
   </form>
